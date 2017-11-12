@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import ReactMarkdown from 'react-markdown';
+
 import './App.css';
 
 class App extends Component {
@@ -8,6 +10,26 @@ class App extends Component {
 		content: '### Type Markdown Here'
   	}
   }
+  rawMarkup() {
+	marked.setOptions({
+		renderer: new marked.Renderer(),
+		gfm: true,
+		tables: true,
+		breaks: false,
+		pedantic: false,
+		sanitize: true,
+		smartLists: true,
+		smartypants: false,
+		highlight: function (code) {
+			return hljs.highlightAuto(code).value
+		}
+	})
+
+	var rawMarkup = marked(this.state.content, {sanitize: true})
+	return {
+		__html: rawMarkup
+	}
+}
   render() {
     return (
       <div className="container-fluid">
@@ -21,7 +43,7 @@ class App extends Component {
   				</div>
   				<div className="col-xs-12 col-sm-6">
   					<h3>Preview</h3>
-  					<div id="preview"></div>
+  					<div id="preview" dangerouslySetInnerHTML={this.rawMarkup()}></div>
   				</div>
   			</div>
 		  </div>
